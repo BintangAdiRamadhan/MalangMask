@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, View, Image, TouchableOpacity, TouchableWithoutFeedback, Modal, Alert, ImageBackground, TextInput, Button } from 'react-native';
 import { Category, SearchNormal, Receipt21, Clock, Message, ArrowRight2, } from 'iconsax-react-native';
 import { fontType, colors } from './src/assets/theme';
+import { ItemGaleri, ItemBerita } from './src/components';
+import { GaleriList, BeritaList } from './data';
 
 const HomeScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -37,7 +39,7 @@ const HomeScreen = () => {
               <Text style={styles.title}>MalanganMask</Text>
             </View>
             <View style={styles.notificationContainer}>
-              <Category size="32" color="#000000"/>
+              <Category size="32" color="#000000" />
             </View>
             <View style={styles.profileContainer}>
               <TouchableOpacity onPress={handleProfilePress}>
@@ -67,15 +69,15 @@ const HomeScreen = () => {
               />
               <View style={styles.searchButtonContainer}>
                 <TouchableOpacity style={styles.searchButton}>
-                <SearchNormal size="35" color="#000000"/>
+                  <SearchNormal size="35" color="#000000" />
                 </TouchableOpacity>
               </View>
             </View>
 
           </View>
         </View>
-        <GaleriTopengKreatif/>
-        <KisahBudayaTopengMalang/>
+        <GaleriTopengKreatif />
+        <KisahBudayaTopengMalang />
         <BelajarTopengMalang />
         <BeritaDanAcara />
       </ScrollView>
@@ -116,65 +118,7 @@ const GaleriTopengKreatif = () => {
       </View>
 
       <View style={styles.listBlog}>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={{ gap: 20 }}>
-          <View style={{ ...itemKategori.cardItem, marginLeft: 0 }}>
-            <ImageBackground
-              style={itemKategori.cardImage}
-              resizeMode="cover"
-              imageStyle={{ borderRadius: 15 }}
-              source={{
-                uri: 'https://i.pinimg.com/564x/9c/24/c0/9c24c0a1cd864ad5c1be7842b9c16ea3.jpg',
-              }}
-            >
-              <View style={itemKategori.cardContent}>
-                <View style={itemKategori.textContainer}>
-                  {/* <Text style={itemKategori.cardTitle}>Wayang Kulit</Text> */}
-                  {/* <Text style={itemKategori.cardText}>Kerajinan yang terkenal hingga ke manca negara dan biasa dipakai pada pertunjukan</Text> */}
-                </View>
-
-              </View>
-            </ImageBackground>
-          </View>
-          <View style={{ ...itemKategori.cardItem, marginLeft: 0 }}>
-            <ImageBackground
-              style={itemKategori.cardImage}
-              resizeMode="cover"
-              imageStyle={{ borderRadius: 15 }}
-              source={{
-                uri: 'https://i.pinimg.com/736x/43/ac/80/43ac806d3033194379922f1d77d48397.jpg',
-              }}
-            >
-              <View style={itemKategori.cardContent}>
-                <View style={itemKategori.textContainer}>
-                  {/* <Text style={itemKategori.cardTitle}>Wayang Kulit</Text> */}
-                  {/* <Text style={itemKategori.cardText}>Kerajinan yang terkenal hingga ke manca negara dan biasa dipakai pada pertunjukan</Text> */}
-                </View>
-
-              </View>
-            </ImageBackground>
-          </View>
-          <View style={{ ...itemKategori.cardItem, marginLeft: 0 }}>
-            <ImageBackground
-              style={itemKategori.cardImage}
-              resizeMode="cover"
-              imageStyle={{ borderRadius: 15 }}
-              source={{
-                uri: 'https://i.pinimg.com/564x/61/29/36/612936c0e0d9ecfa63680b76cef6e861.jpg',
-              }}
-            >
-              <View style={itemKategori.cardContent}>
-                <View style={itemKategori.textContainer}>
-                  {/* <Text style={itemKategori.cardTitle}>Wayang Kulit</Text> */}
-                  {/* <Text style={itemKategori.cardText}>Kerajinan yang terkenal hingga ke manca negara dan biasa dipakai pada pertunjukan</Text> */}
-                </View>
-
-              </View>
-            </ImageBackground>
-          </View>
-        </ScrollView>
+        <ItemGaleri data={GaleriList} />
       </View>
     </View>
   );
@@ -299,7 +243,7 @@ const BelajarTopengMalang = () => {
               <View style={itemSeniDaerah.cardContent}>
                 <View style={itemSeniDaerah.cardInfo}>
                   <Text style={itemSeniDaerah.cardTitle}>
-                    Mengecat topeng 
+                    Mengecat topeng
                   </Text>
                 </View>
               </View>
@@ -320,94 +264,9 @@ const BeritaDanAcara = () => {
         <Text style={styles.textSeni}>Berita Dan Acara</Text>
         <ArrowRight2 color={colors.black()} variant="Linear" size={20} />
       </View>
-      <View style={beritaSeniRupa.listCard}>
-        <View style={beritaSeniRupa.cardItem}>
-          <Image
-            style={beritaSeniRupa.cardImage}
-            source={{
-              uri: 'https://i.pinimg.com/564x/ab/20/3c/ab203cd4e0d38be3d90194308c46bfe6.jpg',
-            }}
-          />
-          <View style={beritaSeniRupa.cardContent}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{ gap: 5, width: '70%' }}>
-                <Text style={beritaSeniRupa.cardCategory}>Melukis</Text>
-                <Text style={beritaSeniRupa.cardTitle}>
-                  Belajar Membuat Topeng dengan benar
-                </Text>
-              </View>
-              <Receipt21
-                color={colors.grey(0.6)}
-                variant="Linear"
-                size={20}
-              />
-            </View>
-            <View style={beritaSeniRupa.cardInfo}>
-              <Clock
-                size={10}
-                variant="Linear"
-                color={colors.grey(0.6)}
-              />
-              <Text style={beritaSeniRupa.cardText}>05 Des 1970</Text>
-              {/* <Message
-                size={10}
-                variant="Linear"
-                color={colors.grey(0.6)}
-              />
-              <Text style={beritaSeniRupa.cardText}>89</Text> */}
-            </View>
-          </View>
-        </View>
-
-      </View>
-      <View style={beritaSeniRupa.listCard}>
-        <View style={beritaSeniRupa.cardItem}>
-          <Image
-            style={beritaSeniRupa.cardImage}
-            source={{
-              uri: 'https://i.pinimg.com/236x/cb/c1/01/cbc101210567c06b99a42ba8bcb16b1b.jpg',
-            }}
-          />
-          <View style={beritaSeniRupa.cardContent}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <View style={{ gap: 5, width: '70%' }}>
-                <Text style={beritaSeniRupa.cardCategory}>Tarian Topeng</Text>
-                <Text style={beritaSeniRupa.cardTitle}>
-                  Penyambutan acara dengan melakukan tarian topeng
-                </Text>
-              </View>
-              <Receipt21
-                color={colors.grey(0.6)}
-                variant="Linear"
-                size={20}
-              />
-            </View>
-            <View style={beritaSeniRupa.cardInfo}>
-              <Clock
-                size={10}
-                variant="Linear"
-                color={colors.grey(0.6)}
-              />
-              <Text style={beritaSeniRupa.cardText}>21 Sep 2023</Text>
-              {/* <Message
-                size={10}
-                variant="Linear"
-                color={colors.grey(0.6)}
-              />
-              <Text style={beritaSeniRupa.cardText}>89</Text> */}
-            </View>
-          </View>
-        </View>
-
-      </View>
+      {BeritaList.map((item, index) => (
+        <ItemBerita item={item} key={index} />
+      ))}
     </View>
 
   );
@@ -608,13 +467,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white(),
   },
   imageBanner: {
-    backgroundColor: '#20b2aa',
+    backgroundColor: '#696969',
     width: 'auto',
     height: 250,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    borderTopRightRadius: 30,
-    borderTopLeftRadius:30,
+    //borderTopRightRadius: 30,
+    //borderTopLeftRadius:30,
   },
   header: {
     paddingHorizontal: 24,
