@@ -1,3 +1,5 @@
 import ItemGaleri from './ItemGaleri'
 import ItemBerita from './itemBerita'
-export {ItemGaleri, ItemBerita}
+import ItemBookmark from './itemBookmark'
+import ItemPostingan from './ItemPostingan'
+export {ItemGaleri, ItemBerita, ItemBookmark, ItemPostingan}
