@@ -2,10 +2,15 @@ import { StyleSheet, Text, View, FlatList, TouchableOpacity, ImageBackground } f
 import React, { useState } from 'react';
 import { Like, Like1, Receipt21 } from 'iconsax-react-native';
 import { fontType, colors } from '../assets/theme';
+import {useNavigation} from '@react-navigation/native';
 
 const ItemGaleri = ({ item }) => {
+  const navigation = useNavigation();
   return (
-    <View style={{ ...itemKategori.cardItem, marginLeft: 0 }}>
+    <TouchableOpacity style={{ ...itemKategori.cardItem, marginLeft: 0 }}onPress={() => navigation.navigate('BlogDetail', {blogId: item.id})}>
+
+
+
       <ImageBackground
         style={itemKategori.cardImage}
         resizeMode="cover"
@@ -15,7 +20,7 @@ const ItemGaleri = ({ item }) => {
         }}
       >
       </ImageBackground>
-    </View>
+    </TouchableOpacity>
   );
 };
 export default ItemGaleri;

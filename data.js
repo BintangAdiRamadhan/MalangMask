@@ -67,3 +67,40 @@ export const ProfileData = {
         tanggal  : "16-09-2023"
     },
   ];
+  export const NotifDetail = [
+    {
+        id: 1,
+        image : "https://assets.kompasiana.com/statics/files/14182843262007291148.jpg?t=o&v=700?t=o&v=770",
+        kategori :"Tari Topeng",
+        title    : "Kesenian Topeng Malang di Taman Krida Budaya",
+        tanggal  : "Klik Disini : https://assets.kompasiana.com/statics/files/14182843262007291148.jpg?t=o&v=700?t=o&v=770"
+    },
+    {
+        id: 2,
+        image : "https://asset-2.tstatic.net/tribunnews/foto/images/preview/20121212_Pameran_Topeng_Panji_dari_Bobung_9232.jpg",
+        kategori :"Pameran Topeng",
+        title : "Taman Budaya Kalsel Gelar Pameran Seni",
+        tanggal  : "05-09-2023"
+    },
+    {
+        id: 3,
+        image : "https://ik.trn.asia/uploads/2021/06/1623193956555.jpeg",
+        kategori :"Pameran Seni Topeng",
+        title : "Pameran Seni Topeng Memotivasi Anak Muda Pulau Bali",
+        tanggal  : "01-02-2023"
+    },
+    {
+        id: 4,
+        image : "https://sektiadi.staff.ugm.ac.id/wp-content/blogs.dir/719/files/IMG_20151118_120917.jpg",
+        kategori :"Pameran Topeng",
+        title : "Power Of Pameran Topeng",
+        tanggal  : "15-11-2023"
+    },
+    {
+        id: 4,
+        image : "https://cdn.antarafoto.com/cache/1200x799/2023/10/16/pameran-topeng-nusantara-18lb6-dom.webp",
+        kategori :"Pameran Topeng Nusantara",
+        title : "Pameran yang bertemakan cerita dibalik topeng nusantara",
+        tanggal  : "16-09-2023"
+    },
+  ];

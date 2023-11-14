@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TouchableOpacity, ImageBackground, Image } from
 import React from 'react';
 import { Receipt21, Clock, Message, Calendar, Notification } from 'iconsax-react-native';
 import { fontType, colors } from '../assets/theme';
+import {useNavigation} from '@react-navigation/native';
 
 const truncateTextByWords = (text, maxWords) => {
   const words = text.split(' ');
@@ -12,8 +13,9 @@ const truncateTextByWords = (text, maxWords) => {
 }
 
 const ItemBookmark = ({ item, onPress, variant }) => {
+  const navigation = useNavigation();
   return (
-    <View style={beritaSeniRupa.listCard}>
+    <TouchableOpacity style={beritaSeniRupa.listCard} onPress={()=>navigation.navigate('BlogDetail', {blogId: item.id})}>
       <View style={beritaSeniRupa.cardItem}>
         <Image
           style={beritaSeniRupa.cardImage}
@@ -54,7 +56,7 @@ const ItemBookmark = ({ item, onPress, variant }) => {
         </View>
       </View>
 
-    </View>
+    </TouchableOpacity>
   );
 };
 
