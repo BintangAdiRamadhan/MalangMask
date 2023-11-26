@@ -1,10 +1,12 @@
 import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
-import { HambergerMenu, Setting, Setting2 } from 'iconsax-react-native';
+import { HambergerMenu, Setting, Setting2, Edit } from 'iconsax-react-native';
 import React from 'react';
 import { ProfileData, BeritaList, GaleriList } from '../../../data';
 import { ItemBookmark, ItemGaleri, ItemPostingan } from '../../components';
 import { fontType, colors } from '../../assets/theme';
+import { useNavigation } from "@react-navigation/native";
 
+const navigation = useNavigation();
 const formatNumber = number => {
   if (number >= 1000000000) {
     return (number / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -81,6 +83,12 @@ const Profile = () => {
           ))}
         </View>
       </ScrollView>
+      <TouchableOpacity
+  style={styles.floatingButton}
+  onPress={() => navigation.navigate("AddPos")}
+>
+  <Edit color={colors.white()} variant="Linear" size={20} />
+</TouchableOpacity>
     </View>
   );
 };
@@ -90,6 +98,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white(),
+  },
+  floatingButton: {
+    backgroundColor: colors.blue(),
+    padding: 15,
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    borderRadius: 10,
+    shadowColor: colors.blue(),
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+
+    elevation: 8,
   },
   header: {
     paddingHorizontal: 24,

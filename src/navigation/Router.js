@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home,  Bookmark, Profile, BlogDetail} from '../screens';
+import {Home,  Bookmark, Profile, BlogDetail, AddPosForm} from '../screens';
 import {Home2, LocationDiscover, Receipt21, ProfileCircle} from 'iconsax-react-native'; 
 import { fontType, colors } from '../assets/theme';
 
@@ -70,6 +70,7 @@ function MainApp() {
           headerShown: false,
         }}
       />
+      
     </Tab.Navigator>
   );
 }
@@ -86,6 +87,18 @@ const Router = () => {
         component={BlogDetail}
         options={{
           headerShown: false, 
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection : 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name="AddPos"
+        component={AddPosForm}
+        options={{
+          headerShown: false,
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
