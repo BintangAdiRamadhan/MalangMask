@@ -3,14 +3,8 @@ import React from 'react';
 import { Receipt21, Clock, Message, Calendar, Notification } from 'iconsax-react-native';
 import { fontType, colors } from '../assets/theme';
 import {useNavigation} from '@react-navigation/native';
+import { formatDate } from '../utils/formatDate';
 
-const truncateTextByWords = (text, maxWords) => {
-  const words = text.split(' ');
-  if (words.length > maxWords) {
-    return words.slice(0, maxWords).join(' ') + ' ...';
-  }
-  return text;
-}
 
 const ItemBookmark = ({ item, onPress, variant }) => {
   const navigation = useNavigation();
@@ -30,8 +24,7 @@ const ItemBookmark = ({ item, onPress, variant }) => {
               justifyContent: 'space-between',
             }}>
             <View style={{ gap: 5, width: '70%' }}>
-              <Text style={beritaSeniRupa.cardCategory}>{item.kategori}</Text>
-              <Text style={beritaSeniRupa.cardTitle}>{item.title}</Text>
+              <Text style={beritaSeniRupa.cardTitle}>{item.judul}</Text>
             </View>
             <Notification
               size={24}
@@ -45,7 +38,7 @@ const ItemBookmark = ({ item, onPress, variant }) => {
               variant="Linear"
               color={'white'}
             />
-            <Text style={beritaSeniRupa.cardText}>{item.tanggal}</Text>
+            <Text style={beritaSeniRupa.cardText}>{formatDate(item.tanggal)}</Text>
             {/* <Message
             size={10}
             variant="Linear"

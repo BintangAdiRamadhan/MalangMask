@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { ArrowLeft } from 'iconsax-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fontType, colors } from "../../assets/theme";
 import axios from 'axios';
 
-const AddBlogForm = () => {
+const AddBlogForm = ({ route }) => {
+  const { blogId } = route.params;
   const [loading, setLoading] = useState(false);
   const dataCategory = [
     { id: 1, name: "Food" },
@@ -32,15 +33,34 @@ const AddBlogForm = () => {
   };
   const [image, setImage] = useState(null);
   const navigation = useNavigation();
-  const handleUpload = async () => {
+  useEffect(() => {
+    getBlogById();
+  }, [blogId]);
+
+  const getBlogById = async () => {
+    try {
+      const response = await axios.get(
+        `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
+      );
+      setBlogData({
+        title: response.data.judul,
+        content: response.data.deskripsi,
+      })
+      setImage(response.data.image)
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleUpdate = async () => {
     setLoading(true);
     try {
-      await axios.post('https://656c47ace1e03bfd572e23cc.mockapi.io/Post', {
-        judul: blogData.title,
-        deskripsi: blogData.content,
-        image,
-        tanggal: new Date(),
-      })
+      await axios
+        .put(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`, {
+          judul: blogData.title,
+          deskripsi: blogData.content,
+          image,
+        })
         .then(function (response) {
           console.log(response);
         })
@@ -53,6 +73,7 @@ const AddBlogForm = () => {
       console.log(e);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -108,7 +129,7 @@ const AddBlogForm = () => {
             style={textInput.content}
           />
         </View>
-        <TouchableOpacity style={styles.button} onPress={handleUpload}>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
           <Text style={styles.buttonLabel}>Upload</Text>
         </TouchableOpacity>
         {/* <View style={[textInput.borderDashed]}>

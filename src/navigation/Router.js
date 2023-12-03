@@ -1,11 +1,11 @@
 import React from 'react';
-import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home,  Bookmark, Profile, BlogDetail, AddPosForm} from '../screens';
-import {Home2, LocationDiscover, Receipt21, ProfileCircle} from 'iconsax-react-native'; 
+import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Home, Bookmark, Profile, BlogDetail, AddPosForm, EditPosForm } from '../screens';
+import { Home2, LocationDiscover, Receipt21, ProfileCircle } from 'iconsax-react-native';
 import { fontType, colors } from '../assets/theme';
 
-const Tab = createBottomTabNavigator(); 
+const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 function MainApp() {
   return (
@@ -30,7 +30,7 @@ function MainApp() {
         component={Home}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({focused, color}) => (
+          tabBarIcon: ({ focused, color }) => (
             <Home2
               color={color}
               variant={focused ? 'Bold' : 'Linear'}
@@ -45,7 +45,7 @@ function MainApp() {
         component={Bookmark}
         options={{
           tabBarLabel: 'Notification',
-          tabBarIcon: ({focused, color}) => (
+          tabBarIcon: ({ focused, color }) => (
             <Receipt21
               color={color}
               variant={focused ? 'Bold' : 'Linear'}
@@ -60,7 +60,7 @@ function MainApp() {
         component={Profile}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({focused, color}) => (
+          tabBarIcon: ({ focused, color }) => (
             <ProfileCircle
               color={color}
               variant={focused ? 'Bold' : 'Linear'}
@@ -70,7 +70,7 @@ function MainApp() {
           headerShown: false,
         }}
       />
-      
+
     </Tab.Navigator>
   );
 }
@@ -80,17 +80,17 @@ const Router = () => {
       <Stack.Screen
         name="MainApp"
         component={MainApp}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="BlogDetail"
         component={BlogDetail}
         options={{
-          headerShown: false, 
+          headerShown: false,
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
-          gestureDirection : 'horizontal',
+          gestureDirection: 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />
@@ -102,7 +102,19 @@ const Router = () => {
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
-          gestureDirection : 'horizontal',
+          gestureDirection: 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name="EditPos"
+        component={EditPosForm}
+        options={{
+          headerShown: false,
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />

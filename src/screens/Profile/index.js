@@ -25,7 +25,7 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={{color:'white', backgroundColor: 'grey', padding: 10, borderRadius: 20}}>bntg.ar</Text>
+        <Text style={{ color: 'white', backgroundColor: 'grey', padding: 10, borderRadius: 20 }}>bntg.ar</Text>
         <HambergerMenu color={colors.black()} variant="Linear" size={24} />
       </View>
       <ScrollView
@@ -83,12 +83,7 @@ const Profile = () => {
           ))}
         </View>
       </ScrollView>
-      <TouchableOpacity
-  style={styles.floatingButton}
-  onPress={() => navigation.navigate("AddPos")}
->
-  <Edit color={colors.white()} variant="Linear" size={20} />
-</TouchableOpacity>
+      
     </View>
   );
 };
@@ -99,23 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white(),
   },
-  floatingButton: {
-    backgroundColor: colors.blue(),
-    padding: 15,
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    borderRadius: 10,
-    shadowColor: colors.blue(),
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-
-    elevation: 8,
-  },
+  
   header: {
     paddingHorizontal: 24,
     justifyContent: 'space-between',

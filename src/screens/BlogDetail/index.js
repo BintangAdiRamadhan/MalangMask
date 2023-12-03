@@ -1,18 +1,63 @@
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
-import {ArrowLeft, Like1, Receipt21, Message, Share, More} from 'iconsax-react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NotifDetail} from '../../../data';
+import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowLeft, Like1, Receipt21, Message, Share, More } from 'iconsax-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NotifDetail } from '../../../data';
 import FastImage from 'react-native-fast-image';
 import { fontType, colors } from '../../assets/theme';
+import axios from 'axios';
+import ActionSheet from 'react-native-actions-sheet';
+import { formatDate } from '../../utils/formatDate';
 
-const BlogDetail = ({route}) => {
-  const {blogId} = route.params;
+const BlogDetail = ({ route }) => {
+  const { blogId } = route.params;
   const [iconStates, setIconStates] = useState({
-    liked: {variant: 'Linear', color: colors.grey(0.6)},
-    bookmarked: {variant: 'Linear', color: colors.grey(0.6)},
+    liked: { variant: 'Linear', color: colors.grey(0.6) },
+    bookmarked: { variant: 'Linear', color: colors.grey(0.6) },
   });
-  const selectedBlog = NotifDetail.find(blog => blog.id === blogId);
+  const [selectedBlog, setSelectedBlog] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const actionSheetRef = useRef(null);
+
+  const openActionSheet = () => {
+    actionSheetRef.current?.show();
+  };
+
+  const closeActionSheet = () => {
+    actionSheetRef.current?.hide();
+  };
+
+  useEffect(() => {
+    getBlogById();
+  }, [blogId]);
+
+  const getBlogById = async () => {
+    try {
+      const response = await axios.get(
+        `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
+      );
+      setSelectedBlog(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const navigateEdit = () => {
+    closeActionSheet()
+    navigation.navigate('EditPos', { blogId })
+  }
+  const handleDelete = async () => {
+    await axios.delete(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`)
+      .then(() => {
+        closeActionSheet()
+        navigation.navigate('Bookmark');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   const navigation = useNavigation();
   const toggleIcon = iconName => {
     setIconStates(prevStates => ({
@@ -36,6 +81,13 @@ const BlogDetail = ({route}) => {
             size={24}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={openActionSheet}>
+          <More
+            color={colors.grey(0.6)}
+            variant="Linear"
+            size={24}
+          />
+        </TouchableOpacity>
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -44,30 +96,87 @@ const BlogDetail = ({route}) => {
           paddingTop: 62,
           paddingBottom: 54,
         }}>
-        <FastImage
+        <Image
           style={styles.image}
           source={{
-            uri: selectedBlog.image,
-            headers: {Authorization: 'someAuthToken'},
-            priority: FastImage.priority.high,
+            uri: selectedBlog?.image,
           }}
-          resizeMode={FastImage.resizeMode.cover}>
-        </FastImage>
+        />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginTop: 15,
           }}>
-          <Text style={styles.category}>{selectedBlog.kategori}</Text>
-          
+
         </View>
-        <Text style={styles.title}>{selectedBlog.title}</Text>
+        <Text style={styles.date}>{formatDate(selectedBlog?.tanggal)}</Text>
+        <Text style={styles.title}>{selectedBlog?.judul}</Text>
         <TouchableOpacity>
-          <Text style={styles.date}>{selectedBlog.tanggal}</Text>
-          </TouchableOpacity>
-        
+          <Text style={styles.date}>{selectedBlog?.deskripsi}</Text>
+        </TouchableOpacity>
       </ScrollView>
+      <ActionSheet
+        ref={actionSheetRef}
+        containerStyle={{
+          borderTopLeftRadius: 25,
+          borderTopRightRadius: 25,
+        }}
+        indicatorStyle={{
+          width: 100,
+        }}
+        gestureEnabled={true}
+        defaultOverlayOpacity={0.3}>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={navigateEdit}
+        >
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: colors.black(),
+              fontSize: 18,
+            }}>
+            Edit
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={handleDelete}>
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: colors.black(),
+              fontSize: 18,
+            }}>
+            Delete
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingVertical: 15,
+          }}
+          onPress={closeActionSheet}>
+          <Text
+            style={{
+              fontFamily: fontType['Pjs-Medium'],
+              color: 'red',
+              fontSize: 18,
+            }}>
+            Cancel
+          </Text>
+        </TouchableOpacity>
+      </ActionSheet>
     </View>
   );
 };
