@@ -8,6 +8,8 @@ import { fontType, colors } from '../../assets/theme';
 import axios from 'axios';
 import ActionSheet from 'react-native-actions-sheet';
 import { formatDate } from '../../utils/formatDate';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 const BlogDetail = ({ route }) => {
   const { blogId } = route.params;
@@ -28,36 +30,76 @@ const BlogDetail = ({ route }) => {
     actionSheetRef.current?.hide();
   };
 
-  useEffect(() => {
-    getBlogById();
-  }, [blogId]);
+  // useEffect(() => {
+  //   getBlogById();
+  // }, [blogId]);
 
-  const getBlogById = async () => {
-    try {
-      const response = await axios.get(
-        `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
-      );
-      setSelectedBlog(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getBlogById = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
+  //     );
+  //     setSelectedBlog(response.data);
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('notifikasi')
+      .doc(blogId)
+      .onSnapshot(documentSnapshot => {
+        const blogData = documentSnapshot.data();
+        if (blogData) {
+          console.log('Blog data: ', blogData);
+          setSelectedBlog(blogData);
+        } else {
+          console.log(`Blog with ID ${blogId} not found.`);
+        }
+      });
+    setLoading(false);
+    return () => subscriber();
+  }, [blogId]);
 
   const navigateEdit = () => {
     closeActionSheet()
     navigation.navigate('EditPos', { blogId })
   }
+  // const handleDelete = async () => {
+  //   await axios.delete(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`)
+  //     .then(() => {
+  //       closeActionSheet()
+  //       navigation.navigate('Bookmark');
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }
   const handleDelete = async () => {
-    await axios.delete(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`)
-      .then(() => {
-        closeActionSheet()
-        navigation.navigate('Bookmark');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
+    setLoading(true);
+    try {
+      await firestore()
+        .collection('notifikasi')
+        .doc(blogId)
+        .delete()
+        .then(() => {
+          console.log('Blog deleted!');
+        });
+      if (selectedBlog?.image) {
+        const imageRef = storage().refFromURL(selectedBlog?.image);
+        await imageRef.delete();
+      }
+      console.log('Blog deleted!');
+      closeActionSheet();
+      setSelectedBlog(null);
+      setLoading(false)
+      navigation.navigate('Profile');
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const navigation = useNavigation();
   const toggleIcon = iconName => {
     setIconStates(prevStates => ({
@@ -110,7 +152,7 @@ const BlogDetail = ({ route }) => {
           }}>
 
         </View>
-        <Text style={styles.date}>{formatDate(selectedBlog?.tanggal)}</Text>
+        <Text style={styles.date}>{formatDate(selectedBlog?.createdAt)}</Text>
         <Text style={styles.title}>{selectedBlog?.judul}</Text>
         <TouchableOpacity>
           <Text style={styles.date}>{selectedBlog?.deskripsi}</Text>

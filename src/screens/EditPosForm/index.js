@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import { ArrowLeft } from 'iconsax-react-native';
+import { ArrowLeft, Add, AddSquare } from 'iconsax-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { fontType, colors } from "../../assets/theme";
 import axios from 'axios';
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
+import FastImage from 'react-native-fast-image';
 
 const AddBlogForm = ({ route }) => {
   const { blogId } = route.params;
@@ -32,47 +36,115 @@ const AddBlogForm = ({ route }) => {
     });
   };
   const [image, setImage] = useState(null);
+  const [oldImage, setOldImage] = useState(null);
   const navigation = useNavigation();
   useEffect(() => {
-    getBlogById();
+    const subscriber = firestore()
+      .collection('notifikasi')
+      .doc(blogId)
+      .onSnapshot(documentSnapshot => {
+        const blogData = documentSnapshot.data();
+        if (blogData) {
+          console.log('Blog data: ', blogData);
+          setBlogData({
+            title: blogData.judul,
+            content: blogData.deskripsi,
+          });
+          setOldImage(blogData.image);
+          setImage(blogData.image);
+          setLoading(false);
+        } else {
+          console.log(`Blog with ID ${blogId} not found.`);
+        }
+      });
+    setLoading(false);
+    return () => subscriber();
   }, [blogId]);
 
-  const getBlogById = async () => {
-    try {
-      const response = await axios.get(
-        `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
-      );
-      setBlogData({
-        title: response.data.judul,
-        content: response.data.deskripsi,
+  const handleImagePick = async () => {
+    ImagePicker.openPicker({
+      width: 1920,
+      height: 1080,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
       })
-      setImage(response.data.image)
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
+      .catch(error => {
+        console.log(error);
+      });
   };
+
   const handleUpdate = async () => {
     setLoading(true);
+    let filename = image.substring(image.lastIndexOf('/') + 1);
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+    const reference = storage().ref(`notifikasiimages/${filename}`);
     try {
-      await axios
-        .put(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`, {
-          judul: blogData.title,
-          deskripsi: blogData.content,
-          image,
-        })
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+      if (image !== oldImage && oldImage) {
+        const oldImageRef = storage().refFromURL(oldImage);
+        await oldImageRef.delete();
+      }
+      if (image !== oldImage) {
+        await reference.putFile(image);
+      }
+      const url =
+        image !== oldImage ? await reference.getDownloadURL() : oldImage;
+      await firestore().collection('notifikasi').doc(blogId).update({
+        judul: blogData.title,
+        deskripsi: blogData.content,
+        image: url,
+      });
       setLoading(false);
-      navigation.navigate('Bookmark');
-    } catch (e) {
-      console.log(e);
+      console.log('Blog Updated!');
+      navigation.navigate('BlogDetail', { blogId });
+    } catch (error) {
+      console.log(error);
     }
   };
+  // useEffect(() => {
+  //   getBlogById();
+  // }, [blogId]);
+
+  // const getBlogById = async () => {
+  //   try {
+  //     const response = await axios.get(
+  //       `https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`,
+  //     );
+  //     setBlogData({
+  //       title: response.data.judul,
+  //       content: response.data.deskripsi,
+  //     })
+  //     setImage(response.data.image)
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // const handleUpdate = async () => {
+  //   setLoading(true);
+  //   try {
+  //     await axios
+  //       .put(`https://656c47ace1e03bfd572e23cc.mockapi.io/Post/${blogId}`, {
+  //         judul: blogData.title,
+  //         deskripsi: blogData.content,
+  //         image,
+  //       })
+  //       .then(function (response) {
+  //         console.log(response);
+  //       })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //       });
+  //     setLoading(false);
+  //     navigation.navigate('Bookmark');
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -120,15 +192,58 @@ const AddBlogForm = ({ route }) => {
         <Text>
           Foto
         </Text>
-        <View style={[textInput.borderDashed]}>
-          <TextInput
-            placeholder="Upload Foto"
-            value={image}
-            onChangeText={(text) => setImage(text)}
-            placeholderTextColor={colors.grey(0.6)}
-            style={textInput.content}
-          />
-        </View>
+        {image ? (
+          <View style={{ position: 'relative' }}>
+            <FastImage
+              style={{ width: '100%', height: 127, borderRadius: 5 }}
+              source={{
+                uri: image,
+                headers: { Authorization: 'someAuthToken' },
+                priority: FastImage.priority.high,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                top: -5,
+                right: -5,
+                backgroundColor: colors.blue(),
+                borderRadius: 25,
+              }}
+              onPress={() => setImage(null)}>
+              <Add
+                size={20}
+                variant="Linear"
+                color={colors.white()}
+                style={{ transform: [{ rotate: '45deg' }] }}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity onPress={handleImagePick}>
+            <View
+              style={[
+                textInput.borderDashed,
+                {
+                  gap: 10,
+                  paddingVertical: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
+              <AddSquare color={colors.grey(0.6)} variant="Linear" size={42} />
+              <Text
+                style={{
+                  fontFamily: fontType['Pjs-Regular'],
+                  fontSize: 12,
+                  color: colors.grey(0.6),
+                }}>
+                Upload Thumbnail
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.button} onPress={handleUpdate}>
           <Text style={styles.buttonLabel}>Upload</Text>
         </TouchableOpacity>

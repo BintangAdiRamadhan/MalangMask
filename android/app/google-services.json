@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "70070275008",
+    "project_id": "malanganmask-30c40",
+    "storage_bucket": "malanganmask-30c40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:70070275008:android:a0d23c1b957a9bb72d5625",
+        "android_client_info": {
+          "package_name": "com.malanganmask"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSCkTnRCxlzqvGNPOup1Su0s7O_KxN5KA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

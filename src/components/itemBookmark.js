@@ -38,7 +38,7 @@ const ItemBookmark = ({ item, onPress, variant }) => {
               variant="Linear"
               color={'white'}
             />
-            <Text style={beritaSeniRupa.cardText}>{formatDate(item.tanggal)}</Text>
+            <Text style={beritaSeniRupa.cardText}>{formatDate(item.createdAt)}</Text>
             {/* <Message
             size={10}
             variant="Linear"
